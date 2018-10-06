@@ -21,6 +21,10 @@ In order to provide a friendly user interface, we build a simple web application
 ### VCellsCpp
 We use CMake in our project, so you have to generate makefile with CMake and then build target with makefile.
 
+#### OpenCV
+We use [OpenCV](https://opencv.org/) in our project. So, you should build and install OpenCV on your machine.
+You can also download a release of VCellsCpp on our [Release Page](https://github.com/MIRALab-USTC/VCells/releases).
+
 #### Generate makefile
 ```
 cd VCellsCpp
@@ -34,10 +38,6 @@ You will see a makefile generated in directory `cmake-build-debug`.
 make
 ```
 This will generate an executable file.
-
-#### OpenCV Library
-We used OpenCV in our project. However, cross-platform of C++ libraries is a tricky problem. We've included a static library `libopencv_ts_macos.a` and `libopencv_ts_linux.a` in the directory for macOS and Linux separately. You can build the static library
-on your own machine if you like.
 
 ### VCellsServer
 
