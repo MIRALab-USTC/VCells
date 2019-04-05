@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+        
+<html lang="en">
+<head>
+    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <meta charset="utf-8">
+    <title>VCells Demo</title>
+    <meta name="description" content="File Upload widget with multiple file selection, drag&amp;drop support and progress bar for jQuery. Supports cross-domain, chunked and resumable file uploads. Works with any server-side platform (PHP, Python, Ruby on Rails, Java, Node.js, Go etc.) that supports standard HTML form file uploads.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- Generic page styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link rel="stylesheet" href="css/jquery.fileupload.css">
+    <!-- CSS for loading animation-->
+    <link rel="stylesheet" href="css/jquery.loading.css">
+
+</head>
+<body>
+</div>
+<div class="container">
+    <h1>Vcells Demo</h1>
+    <h2 class="lead">MIRA Lab, USTC</h2>
+    <br>
+    <blockquote>
+        <p>It is a demo of the VCells algorithm described in
+            <a href="http://www-personal.umich.edu/~jwangumi/publications/VCells.pdf">VCells: Simple and Efficient Superpixels Using
+                Edge-Weighted Centroidal Voronoi Tessellations, TPAMI 34(6), 1241-1247" by Jie Wang and Xiaoqiang Wang.</a> <br>
+            You can also have a try with your own images. <br>
+            The source code can be downloaded in <a href="https://github.com/MIRALab-USTC/VCells">GitHub Page</a>.
+    </blockquote>
+    <br>
+
+    <div class="row">
+        <div class="column" align="center">
+            <img id="original_img" src="#"  title="Original Image" />
+            <br>
+            <div class="lead">Original Image</div>
+        </div>
+        <div class="column" align="center">
+            <img id="init_seg_img" src="#"  title="Initial Segmented Image" />
+            <div class="lead">Initial Segmented Image</div>
+        </div>
+        <div class="column" align="center">
+            <img id="superpixel_img" src="#"  title="VCells SuperPixel Image" />
+            <div class="lead">VCells SuperPixel Image</div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <div align="center">
+        <!-- The fileinput-button span is used to style the file input field as button -->
+        <span class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-plus"></i>
+            <span>Select Image...</span>
+            <!-- The file input field used as target for the file upload widget -->
+            <input id="fileupload" type="file" name="files" >
+        </span>
+    </div>
+
+    <br>
+    <br>
+    <!-- The container for the uploaded files -->
+    <div id="files" class="files"></div>
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Notes</h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li>The maximum file size for uploads in this demo is <strong>1 MB</strong>.</li>
+                <li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed in this demo.</li>
+                <li>Uploaded files will be deleted automatically after <strong>1 minutes or less</strong>.</li>
+                <li>Please refer to the <a href="https://github.com/MIRALab-USTC/VCells">project website</a> documentation</a> for more information.</li>
+                <li>Built with the <a href="http://getbootstrap.com/">Bootstrap</a> CSS framework and Icons from <a href="http://glyphicons.com/">Glyphicons</a>.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="js/vendor/jquery.ui.widget.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="js/jquery.fileupload.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="js/jquery.loading.js"></script>
+<script>
+    $(function() {
+        $('#original_img').attr('src', 'upload-images/demo/demo.jpeg');
+        $('#init_seg_img').attr('src', 'upload-images/demo/demo_init_seg.jpeg');
+        $('#superpixel_img').attr('src', 'upload-images/demo/demo_superpixel.jpeg');
+    });
+
+    $(function () {
+        $('#fileupload').fileupload({
+            autoUpload: true,
+            add: function (e, data) {
+                $('body').loading({
+                    stoppable: false
+                });
+                data.submit();
+            },
+            done: function (e, data) {
+                $('.upl').remove();
+                $('body').loading('stop');
+                console.log(data.result);
+                var jsonObj = JSON.parse(data.result);
+                if (jsonObj.retCode !== 0) {
+                    alert(jsonObj.errMsg);
+                }
+                else {
+                    $('#original_img').attr('src', jsonObj.srcImgPath);
+                    $('#init_seg_img').attr('src', jsonObj.initSegImgPath);
+                    $('#superpixel_img').attr('src', jsonObj.dstImgPath);
+                }
+            },
+            fail: function(e, data) {
+                $('body').loading('stop');
+                alert('Fail!');
+            }
+        });
+    });
+</script>
+</body>
+</html>
